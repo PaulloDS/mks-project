@@ -1,4 +1,8 @@
 "use client"
+
+import "../styles/product-item.scss"
+import Image from "next/image"
+
 import {
   QueryClient,
   QueryClientProvider,
@@ -29,19 +33,24 @@ function Example() {
   if (error) return 'An error has occurred: ' + error.message
 
   return (
-    <div>
-      <h1>Produtos:</h1>
-      <ul>
-        {data?.products.map(product => (
-          <li key={product.id}>
-            <h2>{product.name}</h2>
-            <img src={product.photo} alt="" height={100} width={100}/>
-            <p>Marca: {product.brand}</p>
-            <p>Descrição: {product.description}</p>
-            <p>Preço: R$ {product.price}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="products">
+      {data?.products.map(product => (
+        <div className="product-item">
+          <Image src={product.photo} alt="" width={111} height={138} />
+          <div className="info-item">
+            <h2 className="name">{product.name}</h2>
+            <p className="price">R$ {product.price}</p>
+          </div>
+          <div className="description">
+            <p>{product.description}</p>
+          </div>
+          <div className="buy">
+            <button>
+               COMPRAR
+            </button>
+          </div>
+        </div>        
+      ))}
     </div>
   )
 }

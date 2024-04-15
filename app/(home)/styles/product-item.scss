@@ -1,0 +1,21 @@
+.products{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+}
+
+.product-item{
+    width: 217px;
+    height: 285px;
+
+    .buy{
+        background-color: #0F52BA;
+        width: 100%;
+        height: 31px;
+
+        button{
+            background: transparent;
+            border: none;
+        }
+    }
+}

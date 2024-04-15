@@ -1,0 +1,50 @@
+header{
+    height: 101px;
+    background-color: #0F52BA;
+
+    .content-header{
+        max-width: 1440px;
+        height: 100%;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .logo{
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+
+            h1{
+                font-size: 40px;
+                color: #fff;
+                font-weight: 600;
+            }
+
+            span{
+                color: #fff;
+                font-size: 20px;
+                font-weight: 300;
+            }
+        }
+
+        .car {
+            button {
+                width: 90px;
+                height: 45px;
+                border-radius: 8px;
+                background-color: fff;
+                border: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+
+                span{
+                    font-size: 18px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}
