@@ -1,26 +1,20 @@
-"use client"
+/* eslint-disable react/jsx-key */
+"use client";
 
-import "../styles/header.scss"
-// Header.js
+import "../styles/header.scss";
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Defina os tipos de CartItem e Props
 interface CartItem {
-    id: number;
+    id: string;
     name: string;
     photo: string;
     price: number;
     quantity: number;
 }
 
-interface Props {
-    cartItems: CartItem[];
-    setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
-}
-
-const Header: React.FC<Props> = ({ cartItems, setCartItems }) => {
+const Header = ({ cartItems, setCartItems }: { cartItems: CartItem[], setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>> }) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -34,7 +28,7 @@ const Header: React.FC<Props> = ({ cartItems, setCartItems }) => {
             }
             return cartItem;
         });
-        setCartItems(updatedItems); // Atualiza a lista de itens do carrinho
+        setCartItems(updatedItems);
     };
 
     const handleDecreaseQuantity = (item: CartItem) => {
@@ -44,7 +38,21 @@ const Header: React.FC<Props> = ({ cartItems, setCartItems }) => {
             }
             return cartItem;
         });
-        setCartItems(updatedItems); // Atualiza a lista de itens do carrinho
+        setCartItems(updatedItems);
+    };
+
+    const handleAddToCart = (product: CartItem) => {
+        const existingItem = cartItems.find(item => item.id === product.id);
+        if (existingItem) {
+            handleIncreaseQuantity(existingItem); // Se o item já existir, aumenta a quantidade
+        } else {
+            setCartItems([...cartItems, { ...product, quantity: 1 }]); // Caso contrário, adiciona como um novo item
+        }
+    };
+
+    // Função para calcular o preço total dos itens no carrinho
+    const calculateTotalPrice = () => {
+        return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
     };
 
     return (
@@ -57,7 +65,7 @@ const Header: React.FC<Props> = ({ cartItems, setCartItems }) => {
 
                 <div className="car">
                     <button onClick={toggleMenu}>
-                        <Image src="/Vector.png" alt="Car Icon" width={19} height={18} />
+                        <Image src="/Vector.png" alt="Car Icon" width={19} height={18}/>
                         <div className="quantity-items">
                             <span>{cartItems.length}</span>
                         </div>
@@ -84,7 +92,7 @@ const Header: React.FC<Props> = ({ cartItems, setCartItems }) => {
                             {cartItems.map(item => (
                                 <li key={item.id}>
                                     <div className="product-info">
-                                        <Image src={item.photo} alt="" width={0} height={0} sizes="100vw" style={{ width: '20%', height: 'auto' }} />
+                                        <Image src={item.photo} alt="" width={0} height={0} sizes="100vw" style={{ width: '20%', height: 'auto' }}/>
                                         <p className="item-name">{item.name}</p>
                                         <div className="price-and-qty">
                                             <span>Qtd:</span>
@@ -102,12 +110,14 @@ const Header: React.FC<Props> = ({ cartItems, setCartItems }) => {
                             ))}
                         </ul>
 
-                        <div style={{ position: 'absolute', bottom: 0 }}>
-                            Total:
-                            {/* Exibir o total dos itens do carrinho */}
-                            <div className="final-buy">
-                                <p>Finalizar compra</p>
+                        <div className="total-buy">
+                            <div className="total-price">
+                                <p>Total:</p>
+                                <span>R${calculateTotalPrice().toFixed(2)}</span> {/* Mostra o preço total */}
                             </div>
+                            <button className="final-buy">
+                                <p>Finalizar compra</p>
+                            </button>
                         </div>
                     </motion.div>
                 )}

@@ -1,28 +1,79 @@
-/* eslint-disable react/jsx-key */
-"use client"
+"use client";
 
-import "../styles/product-item.scss"
+import "../styles/product-item.scss";
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import Header from './header';
+import Skeleton from 'react-loading-skeleton'; 
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const queryClient = new QueryClient();
 
-const ProductItem = () => {
-    const [cartItems, setCartItems] = useState([]); // Estado para armazenar os itens do carrinho
+interface Product {
+    id: string;
+    name: string;
+    photo: string;
+    price: number;
+}
 
-    const addToCart = (product) => {
-      const updatedProduct = {
-          ...product,
-          quantity: 1 // Definindo a quantidade inicial como 1 ao adicionar o produto ao carrinho
-      };
-      setCartItems([...cartItems, updatedProduct]); // Adiciona o produto ao carrinho
-  };
+interface CartItem {
+    id: string;
+    name: string;
+    photo: string;
+    price: number;
+    quantity: number;
+}
+
+const LoadingProduct = () => (
+    <div className="product-item">
+        <div className="image">
+            <Skeleton width={100} height={100} />
+        </div>
+        <div className="info-item">
+            <div className="values">
+                <Skeleton width={150} height={20} />
+            </div>
+            <div className="description">
+                <Skeleton count={2} />
+            </div>
+        </div>
+        <div className="buy">
+            <Skeleton width={80} height={0} />
+        </div>
+    </div>
+);
+
+const ProductItem = () => {
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+    const addToCart = (product: Product) => {
+        const existingItem = cartItems.find(item => item.id === product.id);
+        if (existingItem) {
+            // Se o produto já estiver no carrinho, apenas atualiza a quantidade
+            const updatedItems = cartItems.map(item => {
+                if (item.id === existingItem.id) {
+                    return { ...item, quantity: item.quantity + 1 };
+                }
+                return item;
+            });
+            setCartItems(updatedItems);
+        } else {
+            // Caso contrário, adiciona o produto como um novo item
+            const newCartItem: CartItem = {
+                id: product.id,
+                name: product.name,
+                photo: product.photo,
+                price: product.price,
+                quantity: 1
+            };
+            setCartItems([...cartItems, newCartItem]);
+        }
+    };
 
     return (
         <div>
-            <Header cartItems={cartItems} setCartItems={setCartItems} /> {/* Passa a lista de itens do carrinho e a função setCartItems como propriedades para o cabeçalho */}
+            <Header cartItems={cartItems} setCartItems={setCartItems} />
             <QueryClientProvider client={queryClient}>
                 <Example addToCart={addToCart} />
             </QueryClientProvider>
@@ -30,7 +81,7 @@ const ProductItem = () => {
     );
 }
 
-function Example({ addToCart }) {
+function Example({ addToCart }: { addToCart: (product: Product) => void }) {
     const { isFetching, error, data } = useQuery({
         queryKey: ['repoData'],
         queryFn: () =>
@@ -39,14 +90,26 @@ function Example({ addToCart }) {
             ),
     });
 
-    if (isFetching) return 'Loading...';
+    if (isFetching) {
+        // Retorna um array de tamanho igual ao número de produtos carregados
+        const skeletonArray = Array.from({ length: data?.products.length || 8 }, (_, index) => index);
+        return (
+            <div className="content-products-all">
+                <div className="products">
+                    {skeletonArray.map((_, index) => (
+                        <LoadingProduct key={index} />
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     if (error) return 'An error has occurred: ' + error.message;
 
     return (
         <div className="content-products-all">
             <div className="products">
-                {data?.products.map(product => (
+                {data?.products.map((product: Product) => (
                     <div className="product-item" key={product.id}>
                         <div className="image">
                             <Image src={product.photo} alt="" width={0} height={0} sizes="100vw" style={{ width: '60%', height: 'auto' }}/>
@@ -61,7 +124,7 @@ function Example({ addToCart }) {
                             </div>
                         </div>
                         <div className="buy">
-                            <button onClick={() => addToCart(product)}> {/* Adiciona o produto ao carrinho ao clicar */}
+                            <button onClick={() => addToCart(product)}>
                                 <Image src="/shopping-bag.png" alt="" width={12} height={13.5}/>
                                 <p>COMPRAR</p>
                             </button>
