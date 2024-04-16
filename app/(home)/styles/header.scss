@@ -50,8 +50,6 @@ header{
     }
 }
 
-/* header.scss */
-
 .menu-lateral {
     height: 100%;
     width: 500px;
@@ -65,7 +63,7 @@ header{
         flex-direction: column;
         gap: 1rem;
         padding: 2rem;
-        max-height: 600px;
+        max-height: 55%;
         overflow-y: scroll;
     }
 

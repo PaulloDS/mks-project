@@ -44,13 +44,12 @@ const Header = ({ cartItems, setCartItems }: { cartItems: CartItem[], setCartIte
     const handleAddToCart = (product: CartItem) => {
         const existingItem = cartItems.find(item => item.id === product.id);
         if (existingItem) {
-            handleIncreaseQuantity(existingItem); // Se o item já existir, aumenta a quantidade
+            handleIncreaseQuantity(existingItem);
         } else {
-            setCartItems([...cartItems, { ...product, quantity: 1 }]); // Caso contrário, adiciona como um novo item
+            setCartItems([...cartItems, { ...product, quantity: 1 }]);
         }
     };
 
-    // Função para calcular o preço total dos itens no carrinho
     const calculateTotalPrice = () => {
         return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
     };
@@ -113,7 +112,7 @@ const Header = ({ cartItems, setCartItems }: { cartItems: CartItem[], setCartIte
                         <div className="total-buy">
                             <div className="total-price">
                                 <p>Total:</p>
-                                <span>R${calculateTotalPrice().toFixed(2)}</span> {/* Mostra o preço total */}
+                                <span>R${calculateTotalPrice().toFixed(2)}</span>
                             </div>
                             <button className="final-buy">
                                 <p>Finalizar compra</p>

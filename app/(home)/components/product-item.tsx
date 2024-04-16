@@ -50,7 +50,6 @@ const ProductItem = () => {
     const addToCart = (product: Product) => {
         const existingItem = cartItems.find(item => item.id === product.id);
         if (existingItem) {
-            // Se o produto já estiver no carrinho, apenas atualiza a quantidade
             const updatedItems = cartItems.map(item => {
                 if (item.id === existingItem.id) {
                     return { ...item, quantity: item.quantity + 1 };
@@ -59,7 +58,6 @@ const ProductItem = () => {
             });
             setCartItems(updatedItems);
         } else {
-            // Caso contrário, adiciona o produto como um novo item
             const newCartItem: CartItem = {
                 id: product.id,
                 name: product.name,
@@ -91,7 +89,6 @@ function Example({ addToCart }: { addToCart: (product: Product) => void }) {
     });
 
     if (isFetching) {
-        // Retorna um array de tamanho igual ao número de produtos carregados
         const skeletonArray = Array.from({ length: data?.products.length || 8 }, (_, index) => index);
         return (
             <div className="content-products-all">
