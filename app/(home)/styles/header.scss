@@ -75,6 +75,19 @@ header{
         border-radius: 10px;
         justify-content: space-between;
         align-items: center;
+        position: relative;
+
+        .remove-item{
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            border: none;
+            background-color: #000;
+            color: #fff;
+        }
 
         .item-name{
             max-width: 113px;

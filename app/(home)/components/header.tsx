@@ -50,6 +50,11 @@ const Header = ({ cartItems, setCartItems }: { cartItems: CartItem[], setCartIte
         }
     };
 
+    const handleRemoveItem = (itemToRemove: CartItem) => {
+        const updatedItems = cartItems.filter(item => item.id !== itemToRemove.id);
+        setCartItems(updatedItems);
+    };
+
     const calculateTotalPrice = () => {
         return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
     };
@@ -91,6 +96,7 @@ const Header = ({ cartItems, setCartItems }: { cartItems: CartItem[], setCartIte
                             {cartItems.map(item => (
                                 <li key={item.id}>
                                     <div className="product-info">
+                                        <button className="remove-item" onClick={() => handleRemoveItem(item)}>X</button>
                                         <Image src={item.photo} alt="" width={0} height={0} sizes="100vw" style={{ width: '20%', height: 'auto' }}/>
                                         <p className="item-name">{item.name}</p>
                                         <div className="price-and-qty">
